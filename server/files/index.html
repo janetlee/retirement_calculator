@@ -111,8 +111,6 @@
     function calculateRoundedAge(currentAge) {
       if (currentAge % 5 === 0) {
         return currentAge;
-      } else if (currentAge % 5 <= 2) {
-        return currentAge - (currentAge % 5);
       } else {
         return currentAge - (currentAge % 5) + 5;
       }
@@ -137,11 +135,7 @@
 
     function calculateSavings() {
       var savingsPercentage = calculateSavingsPercentage(calculationObject.desiredRetirementIncome, calculationObject.currentSavings);
-
-      console.log("Calc savingsPercentage after clicking button");
-      console.log(savingsPercentage);
       var multiplier = lookupMultiplier(calculationObject.currentAge, savingsPercentage);
-
 
       calculationObject.amount = multiplier * calculationObject.desiredRetirementIncome;
       document.getElementById("amount").innerHTML = (multiplier * calculationObject.desiredRetirementIncome).toFixed(2).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
