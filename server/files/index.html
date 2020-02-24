@@ -38,7 +38,7 @@
 
       <div>
         <label>
-          What would you like your annual income to be in retirement?
+          What would you like your total annual income to be in retirement?
         </label>
         <input type="text" id="desiredRetirementIncome">
         <input type="submit" value="Submit Desired Retirement Income" onclick="setDesiredRetirementIncome()">
@@ -111,6 +111,10 @@
       calculationObject.estimatedSocialSecurity = document.getElementById("estimatedSocialSecurity").value;
     }
 
+    function calculateAnnualSocialSecurity() {
+      calculationObject.annualSocialSecurity = calculationObject.estimatedSocialSecurity * 12;
+    }
+
     function calculateSavingsPercentage(desiredRetirementIncome, currentSavings) {
       return Math.round(100 * currentSavings/desiredRetirementIncome);
     }
@@ -140,12 +144,25 @@
       return matrix[age][savingsRate];
     }
 
-    function calculateSavings() {
-      var savingsPercentage = calculateSavingsPercentage(calculationObject.desiredRetirementIncome, calculationObject.currentSavings);
-      var multiplier = lookupMultiplier(calculationObject.currentAge, savingsPercentage);
+    function calculateTotalAmount() {
+      calculationObject.totalAmount = calculationObject.multiplier * calculationObject.desiredRetirementIncome;
+    }
 
-      calculationObject.amount = multiplier * calculationObject.desiredRetirementIncome;
-      document.getElementById("amount").innerHTML = calculationObject.amount.toFixed(2).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+    function calculateFutureSocialSecurity() {
+      calculationObject.futureSocialSecurity = calculationObject.multiplier * calculationObject.annualSocialSecurity;
+    }
+
+    function calculateSavings() {
+      var data = calculationObject;
+      var savingsPercentage = calculateSavingsPercentage(data.desiredRetirementIncome, data.currentSavings);
+      calculationObject.multiplier = lookupMultiplier(data.currentAge, savingsPercentage);
+
+      calculateAnnualSocialSecurity();
+      calculateTotalAmount();
+      calculateFutureSocialSecurity();
+
+      calculationObject.amount = data.totalAmount - data.futureSocialSecurity;
+      document.getElementById("amount").innerHTML = data.amount.toFixed(2).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
     }
 
     function calculateDifference() {
