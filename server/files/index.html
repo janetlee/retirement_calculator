@@ -1,0 +1,140 @@
+<html>
+  <body>
+    <h1>Retirement Calculator</h1>
+    <p>I built this as a portfolio site with vanillaJS. The source of the calculations comes from <a href="https://www.schwab.com/resource-center/insights/content/retirement-savings-milestones-how-much-should-you-have-now">Charles Schwab</a></p>
+
+    <div>
+      <div>
+        <label for="currentAge">
+          What is your current age?
+        </label>
+        <input type="text" id="currentAge">
+        <input type="submit" value="Submit Current Age" onclick="setCurrentAge()">
+      </div>
+
+      <div>
+        <label>
+          What is your current retirement savings balance?
+        </label>
+        <input type="text" id="currentBalance">
+        <input type="submit" value="Submit Current Balance" onclick="setCurrentBalance()">
+      </div>
+
+      <div>
+        <label>
+          What is your current retirement savings per year?
+        </label>
+        <input type="text" id="currentSavings">
+        <input type="submit" value="Submit Current Savings" onclick="setCurrentSavings()">
+      </div>
+
+      <div>
+        <label>
+          What age would you like to retire (in years)?
+        </label>
+        <input type="text" id="desiredRetirementAge">
+        <input type="submit" value="Submit Desired Retirement Age" onclick="setDesiredRetirementAge()">
+      </div>
+
+      <div>
+        <label>
+          What would you like your annual income to be in retirement?
+        </label>
+        <input type="text" id="desiredRetirementIncome">
+        <input type="submit" value="Submit Desired Retirement Income" onclick="setDesiredRetirementIncome()">
+      </div>
+
+      <div>
+        <p style="bold">
+          Your current retirement savings should be:
+        </p>
+      </div>
+      <div>
+        <button onclick="calculateSavings()" type="button">How much should I have now?</button>
+        <p id="amount"></p>
+
+        <button onclick="calculateDifference()" type="button">How much do I need now?</button>
+        <p id="difference"></p>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    const matrix = {
+      30: {
+        0: 6.5, 5: 5.5, 10: 4.5, 15: 3.6, 20: 2.6, 25: 1.6, 30: 0.6},
+      35: {
+        0: 7.9, 5: 7.0, 10: 6.1, 15: 5.2, 20: 4.3, 25: 3.3, 30: 2.4},
+      40: {
+        0: 9.6, 5: 8.7, 10: 7.9, 15: 7.1, 20: 6.3, 25: 5.5, 30: 4.6},
+      45: {
+        0: 11.6, 5: 10.9, 10: 10.2, 15: 9.4, 20: 8.7, 25: 8.0, 30: 7.3},
+      50: {
+        0: 14.0, 5: 13.5, 10: 12.9, 15: 12.3, 20: 11.7, 25: 11.1, 30: 10.6},
+      55: {
+        0: 17.0, 5: 16.6, 10: 16.2, 15: 15.7, 20: 15.3, 25: 14.9, 30: 14.5},
+      60: {
+        0: 20.6, 5: 20.4, 10: 20.2, 15: 19.9, 20: 19.7, 25: 19.7, 30: 19.2}
+    };
+
+    var calculationObject = {};
+
+    function setCurrentAge() {
+      var currentAge = document.getElementById("currentAge").value;
+      calculationObject.currentAge = currentAge;
+    }
+
+    function setCurrentBalance() {
+      var currentBalance = document.getElementById("currentBalance").value;
+      calculationObject.currentBalance = currentBalance;
+    }
+
+    function setCurrentSavings() {
+      var currentSavings = document.getElementById("currentSavings").value;
+      calculationObject.currentSavings = currentSavings;
+    }
+
+    function setDesiredRetirementAge() {
+      var desiredRetirementAge = document.getElementById("desiredRetirementAge").value;
+      calculationObject.desiredRetirementAge = desiredRetirementAge;
+    }
+
+    function setDesiredRetirementIncome() {
+      var desiredRetirementIncome = document.getElementById("desiredRetirementIncome").value;
+      calculationObject.desiredRetirementIncome = desiredRetirementIncome;
+    }
+
+    function calculateSavingsPercentage(desiredRetirementIncome, currentSavings) {
+      return Math.round(100 * desiredRetirementIncome/currentSavings);
+    }
+
+    function calculateRoundedAge(currentAge) {
+      if (currentAge % 5 === 0) {
+        return currentAge;
+      } else if (currentAge % 5 <= 2) {
+        return currentAge - (currentAge % 5);
+      } else {
+        return currentAge - (currentAge % 5) + 5;
+      }
+    }
+
+    function lookupMultiplier(currentAge, savingsPercentage) {
+      age = calculateRoundedAge(currentAge);
+      return matrix[age][savingsPercentage];
+    }
+
+    function calculateSavings() {
+      var savingsPercentage = calculateSavingsPercentage(calculationObject.desiredRetirementIncome, calculationObject.currentSavings);
+      var multiplier = lookupMultiplier(calculationObject.currentAge, savingsPercentage);
+
+      calculationObject.amount = multiplier * calculationObject.desiredRetirementIncome;
+      document.getElementById("amount").innerHTML = (multiplier * calculationObject.desiredRetirementIncome).toFixed(2).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+    }
+
+    function calculateDifference() {
+      document.getElementById("difference").innerHTML = (calculationObject.amount - calculationObject.currentBalance).toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+
+    }
+
+  </script>
+</html>
