@@ -17,3 +17,4 @@ TODOs:
 * Add something about the future retirement age and bump up the calculations.
 * Add in the calculations for present value of dollars vs future value
 * Add in some calculations for Social Security income
+* Add some tests
