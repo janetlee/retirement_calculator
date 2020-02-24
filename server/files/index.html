@@ -28,13 +28,13 @@
         <input type="submit" value="Submit Current Savings" onclick="setCurrentSavings()">
       </div>
 
-      <div>
+<!--       <div>
         <label>
           What age would you like to retire (in years)?
         </label>
         <input type="text" id="desiredRetirementAge">
         <input type="submit" value="Submit Desired Retirement Age" onclick="setDesiredRetirementAge()">
-      </div>
+      </div> -->
 
       <div>
         <label>
@@ -42,6 +42,14 @@
         </label>
         <input type="text" id="desiredRetirementIncome">
         <input type="submit" value="Submit Desired Retirement Income" onclick="setDesiredRetirementIncome()">
+      </div>
+
+      <div>
+        <label>
+          What will be your expected monthly Social Security check amount?
+        </label>
+        <input type="text" id="estimatedSocialSecurity">
+        <input type="submit" value="Submit Estimated Social Security" onclick="setEstimatedSocialSecurity()">
       </div>
 
       <div>
@@ -80,28 +88,27 @@
     var calculationObject = {};
 
     function setCurrentAge() {
-      var currentAge = document.getElementById("currentAge").value;
-      calculationObject.currentAge = currentAge;
+      calculationObject.currentAge = document.getElementById("currentAge").value;
     }
 
     function setCurrentBalance() {
-      var currentBalance = document.getElementById("currentBalance").value;
-      calculationObject.currentBalance = currentBalance;
+      calculationObject.currentBalance = document.getElementById("currentBalance").value;
     }
 
     function setCurrentSavings() {
-      var currentSavings = document.getElementById("currentSavings").value;
-      calculationObject.currentSavings = currentSavings;
+      calculationObject.currentSavings = document.getElementById("currentSavings").value;
     }
 
     function setDesiredRetirementAge() {
-      var desiredRetirementAge = document.getElementById("desiredRetirementAge").value;
-      calculationObject.desiredRetirementAge = desiredRetirementAge;
+      calculationObject.desiredRetirementAge = document.getElementById("desiredRetirementAge").value;
     }
 
     function setDesiredRetirementIncome() {
-      var desiredRetirementIncome = document.getElementById("desiredRetirementIncome").value;
-      calculationObject.desiredRetirementIncome = desiredRetirementIncome;
+      calculationObject.desiredRetirementIncome = document.getElementById("desiredRetirementIncome").value;
+    }
+
+    function setEstimatedSocialSecurity() {
+      calculationObject.estimatedSocialSecurity = document.getElementById("estimatedSocialSecurity").value;
     }
 
     function calculateSavingsPercentage(desiredRetirementIncome, currentSavings) {
@@ -116,7 +123,7 @@
       }
     }
 
-        function calculateRoundedSavingsPercentage(savingsPercentage) {
+    function calculateRoundedSavingsPercentage(savingsPercentage) {
       if (savingsPercentage % 5 === 0) {
         return savingsPercentage;
       } else if (savingsPercentage % 5 <= 2) {
@@ -138,7 +145,7 @@
       var multiplier = lookupMultiplier(calculationObject.currentAge, savingsPercentage);
 
       calculationObject.amount = multiplier * calculationObject.desiredRetirementIncome;
-      document.getElementById("amount").innerHTML = (multiplier * calculationObject.desiredRetirementIncome).toFixed(2).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+      document.getElementById("amount").innerHTML = calculationObject.amount.toFixed(2).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
     }
 
     function calculateDifference() {
