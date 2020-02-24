@@ -3,6 +3,9 @@ Retirement calculator
 
 I built this for fun as a vanilla JS coding project because recruiters kept asking me if I had a portfolio site.
 
+_Disclaimer:_
+This is not vetted out in any way. If you really need professional financial advice, seek out an actual financial management professional.
+
 To run, download the repo.
 One the command line, from the `/server` directory, type `node server.js`
 Open the browser once the log shows the listener is running on the right port.
