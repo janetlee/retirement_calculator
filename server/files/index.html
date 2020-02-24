@@ -105,22 +105,32 @@
     }
 
     function calculateSavingsPercentage(desiredRetirementIncome, currentSavings) {
-      return Math.round(100 * desiredRetirementIncome/currentSavings);
+      return Math.round(100 * currentSavings/desiredRetirementIncome);
     }
 
     function calculateRoundedAge(currentAge) {
       if (currentAge % 5 === 0) {
         return currentAge;
-      } else if (currentAge % 5 <= 2) {
-        return currentAge - (currentAge % 5);
       } else {
         return currentAge - (currentAge % 5) + 5;
       }
     }
 
+        function calculateRoundedSavingsPercentage(savingsPercentage) {
+      if (savingsPercentage % 5 === 0) {
+        return savingsPercentage;
+      } else if (savingsPercentage % 5 <= 2) {
+        return savingsPercentage - (savingsPercentage % 5);
+      } else {
+        return savingsPercentage - (savingsPercentage % 5) + 5;
+      }
+    }
+
     function lookupMultiplier(currentAge, savingsPercentage) {
       age = calculateRoundedAge(currentAge);
-      return matrix[age][savingsPercentage];
+      savingsRate = calculateRoundedSavingsPercentage(savingsPercentage);
+
+      return matrix[age][savingsRate];
     }
 
     function calculateSavings() {
