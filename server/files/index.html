@@ -1,7 +1,15 @@
 <html>
   <body>
     <h1>Retirement Calculator</h1>
-    <p>I built this as a portfolio site with vanillaJS. The source of the calculations comes from <a href="https://www.schwab.com/resource-center/insights/content/retirement-savings-milestones-how-much-should-you-have-now">Charles Schwab</a></p>
+    <p>I built this as a portfolio site with vanillaJS. The source of some the calculations comes from <a href="https://www.schwab.com/resource-center/insights/content/retirement-savings-milestones-how-much-should-you-have-now">Charles Schwab</a>, namely the matrix in the center of the worksheet.</p>
+
+   <p>Something that has always bothered me is the discounting of dollars in all of these calculations and the present value of money vs discounted dollars on the future Social Security check you're going to receive. This isn't a better mousetrap but an intellectual exercise for me to build a website and to see what this math is all about.</p>
+
+    <p>Disclaimer: If you really need professional financial advice, seek out an actual financial management professional. Don't use these calculations.</p>
+
+    <p>This model assumes a 3% inflation rate for discounting.</p>
+
+    <p>None of this data is persisted in a database so feel free to click away and try out your scenarios.</p>
 
     <div>
       <div>
@@ -28,17 +36,17 @@
         <input type="submit" value="Submit Current Savings" onclick="setCurrentSavings()">
       </div>
 
-<!--       <div>
+      <div>
         <label>
           What age would you like to retire (in years)?
         </label>
         <input type="text" id="desiredRetirementAge">
         <input type="submit" value="Submit Desired Retirement Age" onclick="setDesiredRetirementAge()">
-      </div> -->
+      </div>
 
       <div>
         <label>
-          What would you like your total annual income to be in retirement?
+          What would you like your total annual income to be in retirement? (In current dollars. We'll discount it for you)
         </label>
         <input type="text" id="desiredRetirementIncome">
         <input type="submit" value="Submit Desired Retirement Income" onclick="setDesiredRetirementIncome()">
@@ -68,6 +76,8 @@
   </body>
 
   <script>
+    const inflationRate = .03;
+
     const matrix = {
       30: {
         0: 6.5, 5: 5.5, 10: 4.5, 15: 3.6, 20: 2.6, 25: 1.6, 30: 0.6},
@@ -145,16 +155,21 @@
     }
 
     function calculateTotalAmount() {
-      calculationObject.totalAmount = calculationObject.multiplier * calculationObject.desiredRetirementIncome;
+      var presentValueFutureIncome = calculationObject.desiredRetirementIncome * (((1 + inflationRate) * 100) ^ (calculationObject.desiredRetirementAge - calculationObject.currentAge));
+
+      calculationObject.totalAmount = presentValueFutureIncome / calculationObject.multiplier;
     }
 
     function calculateFutureSocialSecurity() {
-      calculationObject.futureSocialSecurity = calculationObject.multiplier * calculationObject.annualSocialSecurity;
+      var presentValueAnnualSocialSecurity = calculationObject.annualSocialSecurity * (((1 + inflationRate) * 100) ^ (calculationObject.desiredRetirementAge - calculationObject.currentAge));
+
+      calculationObject.futureSocialSecurity = presentValueAnnualSocialSecurity / calculationObject.multiplier;
     }
 
     function calculateSavings() {
       var data = calculationObject;
       var savingsPercentage = calculateSavingsPercentage(data.desiredRetirementIncome, data.currentSavings);
+
       calculationObject.multiplier = lookupMultiplier(data.currentAge, savingsPercentage);
 
       calculateAnnualSocialSecurity();
